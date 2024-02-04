@@ -43,7 +43,7 @@ def generate_neigh(word: str) -> list[str]:
 
     return words
 
-def construct_path(visited: dict, start: str, goal: str) -> LinkedList[str]:
+def construct_path(visited: dict, start: str, goal: str) -> LinkedList:
     """
     Constructs the path using a visited hashmap
 
@@ -68,7 +68,7 @@ def construct_path(visited: dict, start: str, goal: str) -> LinkedList[str]:
     
     return path
 
-def find_path(start: str, goal: str, words: set[str]) -> LinkedList[str]:
+def find_path(start: str, goal: str, words: set[str]) -> LinkedList:
     """Finds the path from a start word to some goal word
 
     Args:
