@@ -2,7 +2,7 @@ from PIL import Image
 import io
 import pathlib
 
-class MapColors:
+class Map:
     PATH_COLOR = (118, 63, 231)
     OPEN_LAND = (248,148,18)
     ROUGH_MEADOW = (255,192,0)
@@ -35,7 +35,7 @@ class ImageHandler:
         pixels = self.img.load()
 
         for stop in path:
-            pixels[stop[0], stop[1]] = MapColors.PATH_COLOR
+            pixels[stop[0], stop[1]] = Map.PATH_COLOR
 
     def saveImg(self, fileName: str) -> None:
         self.img.save(fileName)
@@ -45,6 +45,9 @@ class ImageHandler:
 
     def getHeight(self) -> int:
         return self.img.size[1]
+    
+    def getPixel(self, x: int, y: int) -> tuple[int, int, int]:
+        return self.img.load()[x,y]
 
     def showImg(self):
         self.img.show()
