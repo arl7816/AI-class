@@ -5,6 +5,8 @@ class Configuration:
     X_DISTANCE = 10.29
     Y_DISTANCE = 7.55
 
+    elevations = []
+
     def __init__(self, coordinates: tuple[int, int, int], terrain: tuple[int, int, int], parent: object, goal: object) -> None:
         self.coordinates = coordinates
         self.terrain = terrain
@@ -20,6 +22,13 @@ class Configuration:
             self.fitness = self.cost + self.getDistance(goal)
 
         self.goal = goal
+
+    @staticmethod
+    def generate_elevation(fileName: str):
+        with open(fileName, "r") as file:
+            for line in file.readlines():
+                Configuration.elevations.append([float(element) for element in line.split()])
+
 
     def getDistance(self, otherConfig) -> float:
         x = pow(self.X_DISTANCE * (self.coordinates[0] - otherConfig.coordinates[0]), 2)

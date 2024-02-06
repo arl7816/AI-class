@@ -3,7 +3,6 @@ import sys
 from Configuration import Configuration
 import heapq
 
-
 def find_path(start: Configuration, goal: Configuration) -> list:
     li = [start]
     heapq.heapify(li)
