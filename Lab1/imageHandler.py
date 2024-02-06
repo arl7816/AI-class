@@ -46,8 +46,8 @@ class ImageHandler:
     def getHeight(self) -> int:
         return self.img.size[1]
     
-    def getPixel(self, x: int, y: int) -> tuple[int, int, int]:
-        return self.img.load()[x,y]
+    def getPixel(self, row: int, col: int) -> tuple[int, int, int]:
+        return self.img.load()[row,col]
 
     def showImg(self):
         self.img.show()
