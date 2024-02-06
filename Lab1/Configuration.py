@@ -20,7 +20,7 @@ class Configuration:
         else:
             dist = self.getDistance(parent)
             self.distance = parent.distance + dist
-            self.cost = (parent.cost + dist) * self.getSpeed(self.terrain) # this will be changed later for speeds
+            self.cost = parent.cost + dist * self.getSpeed(self.terrain) # this will be changed later for speeds
 
         if goal is None:
             self.fitness = -1
@@ -49,29 +49,25 @@ class Configuration:
         return self == self.goal
     
     def getSpeed(self, terrain: tuple[int, int, int]) -> int:
-        match terrain:
-            case Map.OPEN_LAND:
-                return 0.5
-            case Map.ROUGH_MEADOW:
-                return 1.5
-            case Map.EASY_FOREST:
-                return 0.7
-            case Map.SLOW_FOREST:
-                return 1.5
-            case Map.WALK_FOREST:
-                return 1.3
-            case Map.IMPASSIBLE:
-                return 10
-            case Map.WATER:
-                return 2
-            case Map.ROAD:
-                return 1
-            case Map.FOOTPATH:
-                return 0.5
-            case _:
-                return 0.1
-
-        return 0
+        if terrain == Map.OPEN_LAND:
+            return 0.5
+        if terrain == Map.ROUGH_MEADOW:
+            return 1.5
+        if terrain == Map.EASY_FOREST:
+            return 0.7
+        if terrain == Map.SLOW_FOREST:
+            return 1.5
+        if terrain == Map.WALK_FOREST:
+            return 1.3
+        if terrain ==  Map.IMPASSIBLE:
+            return 10
+        if terrain == Map.WATER:
+            return 2
+        if terrain == Map.ROAD:
+            return 0.5
+        if terrain == Map.FOOTPATH:
+            return 0.5
+        return 1
 
     def generate_neigh(self) -> list:
         lst = []

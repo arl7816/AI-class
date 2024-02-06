@@ -44,7 +44,7 @@ def main() -> None:
     print(img.getPixel(230, 327))
     print(img.getPixel(276, 279))
 
-    desired_locals = getLocals("Lab1\\examples\\simplePath.txt")
+    desired_locals = getLocals("Lab1\\examples\\complexPath.txt")
     print(desired_locals)
 
     current = time()
