@@ -1,16 +1,17 @@
 from math import pow, sqrt
 from imageHandler import ImageHandler, Map
 
+elevations = []
+
 class Configuration:
     X_DISTANCE = 10.29
     Y_DISTANCE = 7.55
 
-    elevations = []
     IH = None
 
     def __init__(self, row: int, col: int, parent: object, goal: object) -> None:
         self.row, self.col= row, col
-        self.height = Configuration.elevations[row][col]
+        self.height = elevations[row][col]
         self.terrain = Configuration.IH.getPixel(row, col)
         
         if parent is None:
@@ -24,7 +25,7 @@ class Configuration:
         if goal is None:
             self.fitness = -1
         else:
-            self.fitness = self.cost + self.getDistance(goal)
+            self.fitness = self.cost + self.getDistance(goal) * 2
 
         self.goal = goal
 
@@ -32,7 +33,7 @@ class Configuration:
     def generate_elevation(fileName: str) -> None:
         with open(fileName, "r") as file:
             for line in file.readlines():
-                Configuration.elevations.append([float(element) for element in line.split()])
+                elevations.append([float(element) for element in line.split()])
 
     @staticmethod
     def generate_terrain(file_name: str) -> None:
@@ -78,8 +79,8 @@ class Configuration:
         row = self.row
         height = self.height
 
-        max_width = len(Configuration.elevations[0]) - 1
-        max_height = len(Configuration.elevations) - 1
+        max_width = len(elevations[0]) - 1
+        max_height = len(elevations) - 1
 
         # above
         if row != 0 and Configuration.IH.getPixel(row - 1, col) != Map.OUT_OF_BOUNDS:

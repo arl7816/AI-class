@@ -22,7 +22,7 @@ def getLocals(file_name: str) -> list[int, int]:
 def generate_paths(locals: list[int, int], elevation_file: str, terrain_file: str) -> list[LinkedList]:
     paths = []
     for index in range(0, len(locals) - 1):
-        paths.append(find_path(locals[index], locals[index+1], elevation_file, terrain_file, True))
+        paths.append(find_path(locals[index], locals[index+1], elevation_file, terrain_file, False))
         print("Found a path")
     return paths
 
