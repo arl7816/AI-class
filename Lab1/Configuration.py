@@ -15,8 +15,11 @@ class Configuration:
         
         if parent is None:
             self.cost = 0
+            self.distance = 0
         else:
-            self.cost = parent.cost + self.getDistance(parent) + self.getSpeed(self.terrain) # this will be changed later for speeds
+            dist = self.getDistance(parent)
+            self.distance = parent.distance + dist
+            self.cost = (parent.cost + dist) * self.getSpeed(self.terrain) # this will be changed later for speeds
 
         if goal is None:
             self.fitness = -1
@@ -45,6 +48,28 @@ class Configuration:
         return self == self.goal
     
     def getSpeed(self, terrain: tuple[int, int, int]) -> int:
+        match terrain:
+            case Map.OPEN_LAND:
+                return 0.5
+            case Map.ROUGH_MEADOW:
+                return 1.5
+            case Map.EASY_FOREST:
+                return 0.7
+            case Map.SLOW_FOREST:
+                return 1.5
+            case Map.WALK_FOREST:
+                return 1.3
+            case Map.IMPASSIBLE:
+                return 10
+            case Map.WATER:
+                return 2
+            case Map.ROAD:
+                return 1
+            case Map.FOOTPATH:
+                return 0.5
+            case _:
+                return 0.1
+
         return 0
 
     def generate_neigh(self) -> list:
@@ -88,6 +113,8 @@ class Configuration:
         return self.fitness < other.fitness
     
     def __str__(self) -> str:
-        return "(" + str(self.row) + " , " + str(self.col) + ")"
+        return "(" + str(self.row) + ", " + str(self.col) + \
+            ") with cost = " + str(self.cost) + " distance = " + str(self.distance) + \
+            " fitness = " + str(self.fitness)
 
     pass

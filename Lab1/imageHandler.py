@@ -1,6 +1,7 @@
 from PIL import Image
 import io
 import pathlib
+from DataStructs import LinkedList
 
 class Map:
     PATH_COLOR = (118, 63, 231)
@@ -31,11 +32,13 @@ class ImageHandler:
         self.img = Image.open(pathlib.Path(fileName))
         self.img = self.img.convert("RGB")
 
-    def constructPath(self, path: list[tuple]) -> None:
+    def constructPath(self, path: LinkedList) -> None:
         pixels = self.img.load()
 
-        for stop in path:
-            pixels[stop[0], stop[1]] = Map.PATH_COLOR
+        current = path.head
+        while current is not None:
+            pixels[current.data.row, current.data.col] = Map.PATH_COLOR
+            current = current.next
 
     def saveImg(self, fileName: str) -> None:
         self.img.save(fileName)
