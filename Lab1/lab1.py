@@ -4,11 +4,12 @@ from Configuration import Configuration
 from DataStructs import LinkedList
 from time import time
 import heapq
+import sys
 
 def get_distance_for_path(paths: list[LinkedList]) -> int:
     total = 0
     for path in paths:
-        total += path.get(path.size - 1).distance
+        total += path.get(path.size - 2).distance
     return total
 
 def getLocals(file_name: str) -> list[int, int]:
@@ -23,7 +24,6 @@ def generate_paths(locals: list[int, int], elevation_file: str, terrain_file: st
     paths = []
     for index in range(0, len(locals) - 1):
         paths.append(find_path(locals[index], locals[index+1], elevation_file, terrain_file, False))
-        print("Found a path")
     return paths
 
 def draw_path(paths: list[LinkedList], terrain_file: str, output_file: str):
@@ -36,20 +36,17 @@ def draw_path(paths: list[LinkedList], terrain_file: str, output_file: str):
     img.close()
 
 def main() -> None:
-    file1 = "Lab1\\examples\\brown-out.png"
-    file2 = "Lab1\\examples\\brown-out-2.png"
+    # terrain-image, elevation-file, path-file, output-image-filename.
+
+    file1, file2 = sys.argv[1], sys.argv[4]
 
     img = IH(file1)
 
-    print(img.getPixel(230, 327))
-    print(img.getPixel(276, 279))
+    desired_locals = getLocals(sys.argv[3])
 
-    desired_locals = getLocals("Lab1\\examples\\complexPath.txt")
-    print(desired_locals)
-
-    current = time()
-    found_path = generate_paths(desired_locals, "Lab1\\examples\\terrain.txt", file1)
-    print("Time: " + str(time() - current) + "s")
+    #current = time()
+    found_path = generate_paths(desired_locals, sys.argv[2], file1)
+    #print("Time: " + str(time() - current) + "s")
     
     draw_path(found_path, file1, file2)
 

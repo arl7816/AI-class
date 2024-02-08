@@ -52,17 +52,17 @@ class Configuration:
         if terrain == Map.OPEN_LAND:
             return 0.5
         if terrain == Map.ROUGH_MEADOW:
-            return 1.5
+            return 2
         if terrain == Map.EASY_FOREST:
             return 0.7
         if terrain == Map.SLOW_FOREST:
             return 1.5
         if terrain == Map.WALK_FOREST:
-            return 1.3
+            return 1
         if terrain ==  Map.IMPASSIBLE:
-            return 10
+            return 100
         if terrain == Map.WATER:
-            return 2
+            return 6
         if terrain == Map.ROAD:
             return 0.5
         if terrain == Map.FOOTPATH:

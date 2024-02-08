@@ -40,8 +40,10 @@ def find_path(start_coors: tuple[int, int], goal_coors: tuple[int, int], elevati
 
         if current == goal:
             Configuration.IH.close()
+            
             if print_test:
                 print("Found goal of " + str(current))
+            
             return construct_path(visited, start, current)
 
         for config in current.generate_neigh():
