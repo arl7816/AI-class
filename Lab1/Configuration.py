@@ -3,6 +3,7 @@ from imageHandler import ImageHandler, Map
 
 elevations = []
 
+
 class Configuration:
     Y_DISTANCE = 10.29
     X_DISTANCE = 7.55
@@ -13,7 +14,11 @@ class Configuration:
         self.row, self.col= row, col
         #print(row, col)
         #print(len(elevations[17]))
+
+        # this has been generated in the x y order
         self.height = elevations[row][col]
+
+        # the terrain file is in the normal y x order
         self.terrain = Configuration.IH.getPixel(row, col)
         #if self.terrain == Map.EASY_FOREST: print("EASY FOREST")
         #print(self.terrain)
@@ -43,20 +48,49 @@ class Configuration:
         return 1
 
     @staticmethod
+    def transpose(array2):
+        array = array2[:]  # make copy to avoid changing original
+        n = len(array)
+        for i, row in enumerate(array):
+            array[i] = row + [None for _ in range(n - len(row))]
+
+        array = list(zip(*array2))
+        #print(list(array))
+
+        for i, row in enumerate(array):
+            array[i] = [elem for elem in row if elem is not None]
+
+        return array
+
+    @staticmethod
     def generate_elevation(fileName: str) -> None:
+        global elevations
         with open(fileName, "r") as file:
             for line in file.readlines():
                 ary = [float(element) for element in line.split()]
                 elevations.append(ary[:-5])
+        
+        #print("Before:", len(elevations), len(elevations[0]))
+
+        elevations = Configuration.transpose(elevations)
+
+        #print("After:", len(elevations), len(elevations[0]))
+
+
 
     @staticmethod
     def generate_terrain(file_name: str) -> None:
         Configuration.IH = ImageHandler(file_name)
 
+    @staticmethod
+    def get_elevation() -> list[int]:
+        return elevations
+
     def getDistance(self, otherConfig) -> float:
         x = pow(self.X_DISTANCE * (self.col - otherConfig.col), 2)
         y = pow(self.Y_DISTANCE * (self.row - otherConfig.row), 2)
         z = pow((self.height - otherConfig.height), 2)
+        #if z != 0: print(z, self.height, otherConfig.height)
         return sqrt(x + y + z)
     
     def isGoal(self) -> bool:
@@ -80,7 +114,7 @@ class Configuration:
         if terrain == Map.ROAD:
             return 0.5
         if terrain == Map.FOOTPATH:
-            return 0.5
+            return 0.8
         return 1
 
     def generate_neigh(self) -> list:
@@ -112,6 +146,7 @@ class Configuration:
         return lst
     
     def __hash__(self) -> int:
+        # due to floating point errors, fitness and cost are not taken into account
         return hash(self.terrain) + self.row + self.col
     
     def __eq__(self, __value: object) -> bool:

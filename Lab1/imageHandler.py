@@ -38,6 +38,8 @@ class ImageHandler:
         current = path.head
         while current is not None:
             pixels[current.data.row, current.data.col] = Map.PATH_COLOR
+            #print(current.data.distance)
+            #print(current.data.height)
             current = current.next
 
     def saveImg(self, fileName: str) -> None:
@@ -50,10 +52,7 @@ class ImageHandler:
         return self.img.size[1]
     
     def getPixel(self, row: int, col: int) -> tuple[int, int, int]:
-        try:
-            return self.img.load()[row,col]
-        except:
-            return False
+        return self.img.load()[row,col]
 
     def showImg(self):
         self.img.show()

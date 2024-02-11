@@ -38,22 +38,27 @@ def draw_path(paths: list[LinkedList], terrain_file: str, output_file: str):
 def main() -> None:
     # terrain-image, elevation-file, path-file, output-image-filename.
     
-    #file1, file2 = sys.argv[1], sys.argv[4]
-    file1, file2 = "Lab1\\testcases (1)\\testcases\\stripElevation\\terrain.png", 'Lab1\\testcases (1)\\testcases\stripElevation\\terrainOut.png'
+    file1, file2 = sys.argv[1], sys.argv[4]
+    #file1, file2 = "Lab1\\testcases (1)\\testcases\\stripElevation\\terrain.png", 'Lab1\\testcases (1)\\testcases\stripElevation\\terrainOut.png'
 
     img = IH(file1)
 
-    desired_locals = getLocals('Lab1\\testcases (1)\\testcases\\stripElevation\\path.txt')
-    #desired_locals = getLocals(sys.argv[3])
+    #desired_locals = getLocals('Lab1\\testcases (1)\\testcases\\stripElevation\\path.txt')
+    desired_locals = getLocals(sys.argv[3])
 
     #current = time()
-    found_path = generate_paths(desired_locals, 'Lab1\\testcases (1)\\testcases\stripElevation\\mpp.txt', file1, False)
-    #found_path = generate_paths(desired_locals, sys.argv[2], file1)
+    #found_path = generate_paths(desired_locals, 'Lab1\\testcases (1)\\testcases\stripElevation\\mpp.txt', file1, False)
+    found_path = generate_paths(desired_locals, sys.argv[2], file1)
     #print("Time: " + str(time() - current) + "s")
+
+
     
     draw_path(found_path, file1, file2)
 
     print(get_distance_for_path(found_path))
+
+    #print(len(Configuration.get_elevation()[0]))
+    #print(Configuration.IH.getWidth())
 
     #print("Serp", get_distance_for_path(found_path))
 
