@@ -1,0 +1,33 @@
+cost function:
+For my cost function g(n) I decided to use the following equation:
+
+g(n) = g(parent) + d(parent, n) * ((speed(parent) + speed(n)) / 2)
+
+where n is the current node, d is the distance from one node to another
+and the speed function is the speed multiplier. The basic idea behind this
+was to treat the cost function as a work function that calculates the total amount
+of work along the way, thus it needed to take into account both the distance traveled
+and the amount of effort it took to get there. Hence the speed function returns some constant value
+depending on the terrain type of the node location, where easier paths such as roads return 
+a smaller number to encourage the algorithm to go down it, and harder paths such as water return a 
+larger number to discourage going down them, as they are slower and require more effort. 
+
+In addition, both the speed of the parent and the current node are averaged to simulate the travel between them.
+I did this as in my mind, the current node, must travel halfway through its terrain type and then halfway 
+through its child's terrain type to finish a move.
+
+heuristic:
+The heuristic function is fairly simple being:
+
+h(n) = d(n, g)
+
+Where g is the goal and n is the current node. Here the heuristic simply acts as a hot or cold indicator.
+Indicating whether the move resulted in us being farther or closer to our goal state. In the event that we are 
+closer, the algorithm is more likely to go down it, however, if we move down a path that takes us farther away from
+our goal, is it less likely to pick that path. This works as paths that take us further away from our goal
+are not going to take us to our goal the fastest as for every distance x we move away we have to go back an x amount 
+of distance to get back. Thus increasing our distance by 2x and making zero progress, while paths that move closer
+to our goal are far more likely to be our optimal path as they don't lose any progress during their move. 
+
+
+

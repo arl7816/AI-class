@@ -1,10 +1,19 @@
-#from Classes import Queue, LinkedList
-import sys
 from Configuration import Configuration
 import heapq
 from DataStructs import LinkedList
 
-def construct_path(visited: str, start: Configuration, goal: Configuration) -> LinkedList:
+def construct_path(visited: map, start: Configuration, goal: Configuration) -> LinkedList:
+    """
+    Reconstructs the final path for the optimal path
+
+    Args:
+        visited (map): the map of all congiguration parents and children
+        start (Configuration): the start
+        goal (Configuration): the goal
+
+    Returns:
+        LinkedList: the path in the form start -> ... -> goal
+    """
     path = LinkedList()
     
     path.insert(goal)
@@ -20,6 +29,20 @@ def construct_path(visited: str, start: Configuration, goal: Configuration) -> L
     return path
 
 def find_path(start_coors: tuple[int, int], goal_coors: tuple[int, int], elevation_file: str, terrain_file: str, print_test = False) -> list:
+    """
+    Finds the optimal path between a set of points going linearly through them using the 
+    A* algorithm.
+
+    Args:
+        start_coors (tuple[int, int]): the starting coordinates (x,y)
+        goal_coors (tuple[int, int]): the goal coordinates (x,y)
+        elevation_file (str): the file path to the heights data
+        terrain_file (str): the file path to the image of the land
+        print_test (bool, optional): Should we print out each visited nodes info. Defaults to False.
+
+    Returns:
+        LinkedList: the path in the form start -> ... -> goal
+    """
     Configuration.generate_elevation(elevation_file)
     
     Configuration.generate_terrain(terrain_file)
