@@ -50,7 +50,10 @@ class ImageHandler:
         return self.img.size[1]
     
     def getPixel(self, row: int, col: int) -> tuple[int, int, int]:
-        return self.img.load()[row,col]
+        try:
+            return self.img.load()[row,col]
+        except:
+            return False
 
     def showImg(self):
         self.img.show()

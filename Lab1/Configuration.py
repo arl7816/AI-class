@@ -4,36 +4,50 @@ from imageHandler import ImageHandler, Map
 elevations = []
 
 class Configuration:
-    X_DISTANCE = 10.29
-    Y_DISTANCE = 7.55
+    Y_DISTANCE = 10.29
+    X_DISTANCE = 7.55
 
     IH = None
 
     def __init__(self, row: int, col: int, parent: object, goal: object) -> None:
         self.row, self.col= row, col
+        #print(row, col)
+        #print(len(elevations[17]))
         self.height = elevations[row][col]
         self.terrain = Configuration.IH.getPixel(row, col)
+        #if self.terrain == Map.EASY_FOREST: print("EASY FOREST")
+        #print(self.terrain)
         
         if parent is None:
             self.cost = 0
             self.distance = 0
         else:
+            # try to encorpoarte whether downhill or uphill
             dist = self.getDistance(parent)
             self.distance = parent.distance + dist
-            self.cost = parent.cost + dist * self.getSpeed(self.terrain) # this will be changed later for speeds
+            self.cost = parent.cost + dist * ((self.getSpeed(self.terrain) + self.getSpeed(parent.terrain)) / 2)  #* self.incline(parent.height) # this will be changed later for speeds
 
         if goal is None:
             self.fitness = -1
         else:
-            self.fitness = self.cost + self.getDistance(goal) * 2
+            self.fitness = self.cost + self.getDistance(goal) * 1
 
         self.goal = goal
+
+    def incline(self, height: float) -> float:
+        # makes it much slower for some reason
+        if self.height > height:
+            return .9
+        elif self.height < height:
+            return 1.1
+        return 1
 
     @staticmethod
     def generate_elevation(fileName: str) -> None:
         with open(fileName, "r") as file:
             for line in file.readlines():
-                elevations.append([float(element) for element in line.split()])
+                ary = [float(element) for element in line.split()]
+                elevations.append(ary[:-5])
 
     @staticmethod
     def generate_terrain(file_name: str) -> None:
@@ -54,15 +68,15 @@ class Configuration:
         if terrain == Map.ROUGH_MEADOW:
             return 2
         if terrain == Map.EASY_FOREST:
-            return 0.7
+            return 0.5
         if terrain == Map.SLOW_FOREST:
-            return 1.5
+            return 2.5
         if terrain == Map.WALK_FOREST:
             return 1
         if terrain ==  Map.IMPASSIBLE:
-            return 100
+            return 1000
         if terrain == Map.WATER:
-            return 6
+            return 4
         if terrain == Map.ROAD:
             return 0.5
         if terrain == Map.FOOTPATH:
@@ -98,12 +112,12 @@ class Configuration:
         return lst
     
     def __hash__(self) -> int:
-        return hash(self.terrain) + self.row + self.col + hash(self.cost) + hash(self.fitness)
+        return hash(self.terrain) + self.row + self.col
     
     def __eq__(self, __value: object) -> bool:
         result = False
         if isinstance(__value, Configuration):
-            result = self.row == __value.row and self.col == __value.col and self.height == __value.height
+            result = self.row == __value.row and self.col == __value.col
         return result
     
     def __lt__(self, other):
@@ -112,6 +126,7 @@ class Configuration:
     def __str__(self) -> str:
         return "(" + str(self.row) + ", " + str(self.col) + \
             ") with cost = " + str(self.cost) + " distance = " + str(self.distance) + \
-            " fitness = " + str(self.fitness)
+            " fitness = " + str(self.fitness) + " terrain = " + str(self.terrain) + \
+            " DTG = " + str(self.getDistance(self.goal))
 
     pass
