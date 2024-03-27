@@ -1,4 +1,5 @@
 from Predicates import Predicate
+from copy import deepcopy
 
 class Clause():
     @staticmethod
@@ -23,15 +24,8 @@ class Clause():
         for pred1 in self.statement:
             for pred2 in other.statement:
                 if pred1.checkNegation(pred2):
-
-                    #print(pred1, "is the negation of", pred2)
-
-                    # combine statements here
-
-                    # do the unification
-
-                    # then remove pred1 and pred2
-
+                    #print("Adding", self, "with", other)
+                    print(pred1, "and", pred2, "are negations")
                     newStatement1 = self.getLst(pred1)
 
                     newStatement2 = other.getLst(pred2)
@@ -45,25 +39,42 @@ class Clause():
                     newClause = Clause("")
                     newClause.statement = tuple(sorted(unifyStatements))
 
+                    #print("Appending", newClause)
                     result.append(newClause)
         
         return result
     
-    def replaceAll(self, unified: list, variable: str, constant: str) -> list:
-        for pred in unified:
+    def replaceAll(self, unified: list, variable: str, constant: str, function = None) -> list:
+        #print("Before:", [str(p) for p in unified])
+        #print("Replacing all", variable, "with", constant)
+        cpy = unified[:]
+        for pred in cpy:
             for index, arg in enumerate(pred.arguments):
                 if arg == variable:
                     pred.arguments[index] = constant
-        return unified
+                    if function is not None:
+                        pred.functions[index] = function
+        #print("After", [str(p) for p in unified], "\n")
+        return cpy
 
     def doUnify(self, lst: list, pred1: Predicate, pred2: Predicate) -> list:
         if pred1.arguments is None or pred2.arguments is None: return lst
 
-        cpy = lst[:]
+        cpy = deepcopy(lst)
 
         for index, arg in enumerate(pred1.arguments):
-            if pred1.isVarible(arg) and pred1.isConstant(pred2.arguments[index]):
+            if pred1.isVarible(arg) and pred1.isConstant(pred2.arguments[index]) \
+                and not(pred1.isFunction(index)) and not(pred2.isFunction(index)):
                 cpy = self.replaceAll(cpy, arg, pred2.arguments[index])
+            
+            if pred2.isFunction(index) and pred1.isVarible(arg) and pred2.isVarible(pred2.arguments[index]):
+                print("Have function type of", pred2.functions[index])
+                cpy = self.replaceAll(cpy, arg, pred2.arguments[index], pred2.functions[index])
+
+            if pred1.isVarible(arg) and not(pred1.isFunction(index)) and \
+                pred2.isFunction(index) and pred2.isConstant(pred2.arguments[index]):
+                cpy = self.replaceAll(cpy, arg, pred2.arguments[index], pred2.functions[index])
+
 
         return cpy
 

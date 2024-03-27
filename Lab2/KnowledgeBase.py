@@ -8,6 +8,7 @@ class KnowledgeBase():
     variables = set()
     constants = set()
     predicates = set()
+    functions = set()
 
     def __init__(self, filename: str) -> None:
         with open(filename, "r") as file:
@@ -30,11 +31,16 @@ class KnowledgeBase():
                     const.removesuffix("\n")
                 self.constants.add(const)
 
+            for funct in lines[3].split()[1:]:
+                if funct[-1] == "\n":
+                    funct.removesuffix("\n")
+                self.functions.add(funct)
+
             for line in lines[5:]:
                 self.kb.append(Clause(line[:-1]))
                 self.known.add(self.kb[-1])
             
-            Clause.init(self.predicates, self.variables, self.constants, None)
+            Clause.init(self.predicates, self.variables, self.constants, self.functions)
 
 
     def isSat(self) -> bool:
@@ -71,5 +77,8 @@ class KnowledgeBase():
         return self.kb
     
     def __str__(self) -> str:
-        return str([x.__str__() for x in self.kb])
+        returnStr = "KB:\n"
+        for clause in self.kb:
+            returnStr += str(clause) + "\n"
+        return returnStr
 

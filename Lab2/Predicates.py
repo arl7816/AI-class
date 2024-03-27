@@ -1,13 +1,17 @@
+from copy import deepcopy
+
 class Predicate:
     predicates = None
     variables = None
     constants = None
+    functions = None
 
     @staticmethod
     def init(newPredicates: set, newVariables: set, newConstants: set, functions: set):
         Predicate.predicates = newPredicates
         Predicate.variables = newVariables
         Predicate.constants = newConstants
+        Predicate.functions = functions
 
 
     def __init__(self, value: str) -> None:
@@ -21,6 +25,9 @@ class Predicate:
         """
         self.value = value
 
+        # list of dict thats map a arg index to a function
+        self.functions = dict()
+
         self.negation = (self.value[0] == "!")
 
         tempValue = value[:].removeprefix("!")
@@ -33,6 +40,14 @@ class Predicate:
         
         self.pred = tempValue[:index]
         self.arguments = tempValue[index+1:-1].split(",")
+
+        for index, arg in enumerate(self.arguments):
+            testFunctionIndex = arg.find("(")
+            if testFunctionIndex == -1:
+                continue
+            self.functions[index] = arg[:testFunctionIndex]
+            self.arguments[index] = arg[testFunctionIndex + 1: -1]
+
 
     @staticmethod
     def proof():
@@ -74,6 +89,19 @@ class Predicate:
         
         return False
     
+    def getArgumentsAsString(self) -> list:
+        args = deepcopy(self.arguments)
+        for index in range(len(args)):
+            if index in self.functions:
+                args[index] = str(self.functions[index]) + "(" + str(args[index]) + ")"
+        return str(args)
+
+    def isFunction(self, index: int) -> bool:
+        return index in self.functions
+    
+    def isArgFunction(self, arg: str) -> bool:
+        return self.isFunction(self.arguments.index(arg))
+    
     def __eq__(self, __value: object) -> bool:
         result = False
 
@@ -94,4 +122,4 @@ class Predicate:
             hash(tuple(self.arguments)) if self.arguments is not None else 0
 
     def __str__(self) -> str:
-        return ("!" if self.negation else "") + self.pred + "(" + str(self.arguments) + ")"
+        return ("!" if self.negation else "") + self.pred + "(" + self.getArgumentsAsString() + ")"
