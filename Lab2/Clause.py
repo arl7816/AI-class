@@ -51,23 +51,11 @@ class Clause():
         
         if self == other:
             return [self]
-    
-        #print(self, "and", other, "are being added")
-        
-        checker = False
-        if str(other) == "(\"!loves([\'x5\', \'Kim\'])\",)" and str(self) == "(\"loves([\'SKF0(Kim)', \'Kim\'])\",)":
-            checker = True
-            #print("Hazzah for", self, "and", other)
         
         for pred1 in self.statement:
             for pred2 in other.statement:
-                #print("My check results in", pred1.checkNegation(pred2), "for", pred1, "and", pred2)
                 negation = pred1.checkNegation(pred2)
-                #if checker: print("Right before")
                 if negation:
-                    #if checker: print("I have entered")
-                    #print("Adding", self, "with", other)
-                    #print(pred1, "and", pred2, "are negations")
                     newStatement1 = self.getLst(pred1)
 
                     newStatement2 = other.getLst(pred2)
@@ -96,8 +84,6 @@ class Clause():
         Returns:
             list[clause]: the updated (unified) version of the clause 
         """
-        #print("Before:", [str(p) for p in unified])
-        #print("Replacing all", variable, "with", constant, "and a function", function)
         cpy = unified[:]
         if constant is None:
             constant = Predicate.newVari()
@@ -107,7 +93,6 @@ class Clause():
                     pred.arguments[index] = constant
                     if function is not None:
                         pred.functions[index] = function
-        #print("After", [str(p) for p in unified], "\n")
         return cpy
 
     def doUnify(self, lst: list, pred1: Predicate, pred2: Predicate) -> list:
@@ -142,7 +127,6 @@ class Clause():
             
             #one is a free variable, the other is a function
             elif pred2.isFunction(index) and pred1.isVarible(arg) and pred2.isVarible(pred2.arguments[index]):
-                #print("Have function type of", pred2.functions[index])
                 cpy = self.replaceAll(cpy, [arg], pred2.arguments[index], pred2.functions[index])
 
             # one is a free varaible while the other is a constant function
@@ -209,7 +193,6 @@ class Clause():
         result = False
 
         if (isinstance(__value, Clause)):
-            #return hash(self) == hash(__value)
             return self.statement == __value.statement
         
         return result

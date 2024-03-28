@@ -130,7 +130,6 @@ class Predicate:
         Returns:
             bool: true if the two arguments can be unified, false otherwise
         """
-        #print("checking", argument1, "with", argument2, "using", Predicate.variables)
 
         # can assume arguments are same and predicate is same
 
@@ -148,15 +147,12 @@ class Predicate:
         # [p(F(x1))] [p(KIM)] --> F(x1) can never take the form KIM
         if self.isFunction(index) and self.isConstant(argument2) or \
             other.isFunction(index) and self.isConstant(argument1):
-            #print("Well Im here now for ", self, "and", other)
-            #print("False here1")
             return False
         
         # both are constant but one is a function
         # [p(F(KIM))] [P(KIM)]
         if self.isConstant(argument1) and self.isConstant(argument2) and \
             (self.isFunction(index) or other.isFunction(index)):
-                #print("False here2 because of", argument1, "and", argument2)
                 return False
         
         # if one is a free variable and the other is a constant function
@@ -166,7 +162,6 @@ class Predicate:
             other.isVarible(argument2) and self.isConstant(argument1) and self.isFunction(index):
                 return True
 
-        #print("Im here: argument is function for argument2 is", other.isFunction(index), "for argument", argument2)
         return argument1 == argument2
     
     def unifyAll(self, other) -> bool:

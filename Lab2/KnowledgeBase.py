@@ -83,14 +83,11 @@ class KnowledgeBase():
 
                 result = clause1 + cluase2
                 for cl in result:
-                    #print(cl + " checking")
-
 
                     if cl.isEmpty(): 
                         return False
 
                     if cl not in self.known:
-                        #print(cl + " has been found using" + str(clause1) + " and " + str(cluase2))
                         self.known.add(cl)
                         self.kb.append(cl)
 
