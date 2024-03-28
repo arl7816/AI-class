@@ -149,12 +149,14 @@ class Predicate:
         if self.isFunction(index) and self.isConstant(argument2) or \
             other.isFunction(index) and self.isConstant(argument1):
             #print("Well Im here now for ", self, "and", other)
+            #print("False here1")
             return False
         
         # both are constant but one is a function
         # [p(F(KIM))] [P(KIM)]
         if self.isConstant(argument1) and self.isConstant(argument2) and \
-            (self.isArgFunction(argument1) or other.isFunction(index)):
+            (self.isFunction(index) or other.isFunction(index)):
+                #print("False here2 because of", argument1, "and", argument2)
                 return False
         
         # if one is a free variable and the other is a constant function
@@ -207,6 +209,9 @@ class Predicate:
         Returns:
             list[str]: the string representation of the arguments
         """
+        if self.arguments is None:
+            return str(None)
+
         args = deepcopy(self.arguments)
         for index in range(len(args)):
             if index in self.functions:

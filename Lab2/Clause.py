@@ -47,15 +47,25 @@ class Clause():
             raise TypeError("Other must be a clause")
 
         result = []
+
         
         if self == other:
             return [self]
+    
+        #print(self, "and", other, "are being added")
+        
+        checker = False
+        if str(other) == "(\"!loves([\'x5\', \'Kim\'])\",)" and str(self) == "(\"loves([\'SKF0(Kim)', \'Kim\'])\",)":
+            checker = True
+            #print("Hazzah for", self, "and", other)
         
         for pred1 in self.statement:
             for pred2 in other.statement:
                 #print("My check results in", pred1.checkNegation(pred2), "for", pred1, "and", pred2)
                 negation = pred1.checkNegation(pred2)
+                #if checker: print("Right before")
                 if negation:
+                    #if checker: print("I have entered")
                     #print("Adding", self, "with", other)
                     #print(pred1, "and", pred2, "are negations")
                     newStatement1 = self.getLst(pred1)
