@@ -1,8 +1,18 @@
 from Clause import Clause
 
 class KnowledgeBase():
+    """
+    Manages the knowledge base
+
+    NOTE: it is assumed that only one instance of the knowledge base is being used and
+    interacted with in a given process
+    """
+    # every clause within the knowledge base
     kb = []
+    # known clauses
     known = set()
+
+    # clause combinations tested
     actions = set()
 
     variables = set()
@@ -11,6 +21,14 @@ class KnowledgeBase():
     functions = set()
 
     def __init__(self, filename: str) -> None:
+        """
+        Constructs the knowledge base. 
+        Post-Cond: Updates the known variables, constants, predicates, and functions 
+        statically.
+
+        Args:
+            filename (str): the file path containing the initial knowledge base
+        """
         with open(filename, "r") as file:
             lines = file.readlines()
 
@@ -44,19 +62,29 @@ class KnowledgeBase():
 
 
     def isSat(self) -> bool:
+        """
+        Determines if a knowledge base is satisfiable.
+        POST-COND: the knowledge base is updated to include new 
+        clauses, but only ones that can be formed via unification
+
+
+        Returns:
+            bool: false if a empty clause is found, true otherwise
+        """
         for clause1 in self.kb:
             for cluase2 in self.kb:
                 if clause1 == cluase2: continue
 
-                if (clause1, cluase2) not in self.actions \
+                """if (clause1, cluase2) not in self.actions \
                     or (cluase2, clause1) not in self.actions:
                     self.actions.add((clause1, cluase2))
                 else:
-                    continue
+                    continue"""
 
                 result = clause1 + cluase2
                 for cl in result:
                     #print(cl + " checking")
+
 
                     if cl.isEmpty(): 
                         return False
@@ -70,13 +98,26 @@ class KnowledgeBase():
 
         return True
 
-    def contains(self, pred: str) -> bool:
-        return pred in self.known
 
     def getKB(self) -> list:
+        """Gets the knowledge base
+
+        Returns:
+            list[Clause]: An array of clauses
+        """
         return self.kb
     
     def __str__(self) -> str:
+        """
+        Returns the string representation of the knowledge base
+
+        Returns:
+            str: takes the form KB:\n
+            <Clause1>\n
+            <Clause2>\n
+            ...\n
+            <ClauseN>
+        """
         returnStr = "KB:\n"
         for clause in self.kb:
             returnStr += str(clause) + "\n"
