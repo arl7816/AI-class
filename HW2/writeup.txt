@@ -1,0 +1,19 @@
+1. grandchild of elizabeth
+command: setof(X,grandchildOf(X,elizabeth),List).
+Output:
+List = [beatrice, eugenie, harry, james, louise, peter, william, zara]
+
+2. brother in laws of diana
+Command: setof(X,brotherInLawOf(X, diana),List).
+Output:
+List = [andrew, edward]
+
+3. Cousins of zara
+Command: setof(X,firstCousinOf(X, zara),List).
+Output:
+List = [beatrice, eugenie, harry, james, louise, william]
+
+4. ancestor of eugenie's 
+Command: setof(X,ancestorOf(X, eugenie),List).
+Output:
+List = [andrew, elizabeth, george, mum, philip, sarah]
