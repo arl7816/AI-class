@@ -10,8 +10,8 @@ class Hypothesis:
 
 class AdaBoost:
 
-    def __init__(self, data: list[str], maxDepth = 10) -> None:
-        self.H = self.boost(data, 1000)
+    def __init__(self, data: list[str], K: int) -> None:
+        self.H = self.boost(data, K)
 
     @staticmethod
     def normalizeArray(lst: list[float]) -> list[float]:
@@ -43,7 +43,7 @@ class AdaBoost:
             if self.answer(example[:-1]) == example[-1]:
                 correct += 1
         
-        return correct / n * 100
+        return 100 - (correct / n * 100)
 
     def boost(self, data: list[str], K: int) -> list[Hypothesis]:
         startWeight = 1 / len(data)
@@ -52,9 +52,10 @@ class AdaBoost:
         H = []
 
         for k in range(K):
-            h = Hypothesis(startWeight, DTree(data, 1))
+            #print(exampleWeights)
+            h = Hypothesis(startWeight, DTree(data, 1, exampleWeights))
 
-            err = 0.0000001
+            err = 0
 
             for index, example in enumerate(data):
                 if h.tree.testAnswer(example) == False:
@@ -64,11 +65,12 @@ class AdaBoost:
                 if h.tree.testAnswer(example) == True:
                     exampleWeights[index] *= deltaW
             
-            # normalize the weights
+            # Normalize the weights
             exampleWeights = AdaBoost.normalizeArray(exampleWeights)
 
             h.weight = .5 * log1p((1 - err) / err)
             H.append(h)
+
         return H
 
 
