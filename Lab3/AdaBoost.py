@@ -1,6 +1,7 @@
-from Structs import DTree, Example, Node
+from Structs import DTree
 from math import log1p, sqrt
 from copy import deepcopy
+from DTreeInterface import DTreeCore, Node, Example
 
 class Hypothesis:
 
@@ -8,9 +9,10 @@ class Hypothesis:
         self.weight = weight
         self.tree = tree
 
-class AdaBoost:
+class AdaBoost(DTreeCore):
 
-    def __init__(self, data: list[str], K: int) -> None:
+    def __init__(self, data: list[str], K: int, positive: str, negative: str) -> None:
+        super().__init__(positive, negative)
         self.H = self.boost(data, K)
 
     @staticmethod
@@ -25,14 +27,11 @@ class AdaBoost:
     def answer(self, input: list[str]) -> any:
         z = 0
         for h in self.H:
-            z += h.weight * (1 if h.tree.answer(input) == "A" else -1)
+            z += h.weight * (1 if h.tree.answer(input) == self.positive else -1)
 
-        if z > 0: return "A"
-        return "B"
+        if z > 0: return self.getPos()
+        return self.getNeg()
     
-    def testAnswer(self, example: list[str]) -> bool:
-        expected = example[-1]
-        return self.answer(example[:-1]) == expected
     
     def test(self, examples: list[list[str]]) -> float:
         n = len(examples)

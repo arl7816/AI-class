@@ -2,26 +2,11 @@ import numpy as np
 from numpy import ndarray
 from copy import deepcopy
 from math import log
+from DTreeInterface import DTreeCore, Node, Example
 
-
-def vectorize(lst: list) -> ndarray:
-    return np.array(lst)
-
-class Example:
-    def __init__(self, inputs: list[str], weight = 1) -> None:
-        self.inputs = inputs[:-1]
-        self.classification = inputs[-1]
-        self.weight = weight
-
-class Node:
-    def __init__(self, value: int, no = None, yes = None, isResponse = False):
-        self.value = value
-        self.no = no
-        self.yes = yes
-        self.isResponse = isResponse
-
-class DTree:
-    def __init__(self, data: list[str], maxDepth = 10, exampleWeight = None) -> None:
+class DTree(DTreeCore):
+    def __init__(self, data: list[str], positive: str, negative: str, maxDepth = 10, exampleWeight = None) -> None:
+        super().__init__(positive, negative)
         self.examples = [Example(dataPoint.split()) for dataPoint in data]
         self.root = self.DLT(self.examples, [i for i in range(len(self.examples[0].inputs))], None, maxDepth, exampleWeight)
 
@@ -37,15 +22,14 @@ class DTree:
                 break
         return result
 
-    @staticmethod
-    def majority(examples: list[Example]) -> Node:
-        numA = 0
-        numB = 0
+    def majority(self, examples: list[Example]) -> Node:
+        numPos = 0
+        numNeg = 0
         for example in examples:
-            if example.classification == "A": numA += 1
-            if example.classification == "B": numB += 1
+            if example.classification == self.getPos(): numPos += 1
+            if example.classification == self.getNeg(): numNeg += 1
         
-        result = Node("A" if numA > numB else "B", isResponse=True)
+        result = Node(self.getPos() if numPos > numNeg else self.getNeg(), isResponse=True)
         return result
     
     @staticmethod
@@ -57,14 +41,14 @@ class DTree:
     def entropy(p) -> float:
         return p * DTree.information(p) + (1 - p) * DTree.information(1 - p)
 
-    @staticmethod
-    def Remainder(examples: list[Example], state: str, question: int, p: float, n: float, exampleWeights: list[float]) -> float:
+
+    def Remainder(self, examples: list[Example], state: str, question: int, p: float, n: float, exampleWeights: list[float]) -> float:
         pk = 0
         nk = 0
 
         for i, example in enumerate(examples):
             if example.inputs[question] == state:
-                if example.classification == "B":
+                if example.classification == self.getNeg():
                     nk += exampleWeights[i]
                 else:
                     pk += exampleWeights[i]
@@ -74,15 +58,14 @@ class DTree:
             div = 1
         return ((pk + nk) / (p + n)) * DTree.entropy(pk / div)
 
-    @staticmethod
-    def importance(question: int, examples: list[Example], exampleWeights: list[float]) -> float:
+    def importance(self, question: int, examples: list[Example], exampleWeights: list[float]) -> float:
         # gets gain
         gain = 0
         total_weight = sum(exampleWeights)
         n, p = 0, 0
 
         for i, example in enumerate(examples):
-            if example.classification == "B":
+            if example.classification == self.getNeg():
                 n += exampleWeights[i]
             else:
                 p += exampleWeights[i]
@@ -90,16 +73,15 @@ class DTree:
         gain = DTree.entropy(p / total_weight)
 
         remainder = (p + n) / total_weight * \
-                    (DTree.Remainder(examples, "False", question, p, n, exampleWeights) * 
-                     DTree.Remainder(examples, "True", question, p, n, exampleWeights))
+                    (self.Remainder(examples, "False", question, p, n, exampleWeights) * 
+                     self.Remainder(examples, "True", question, p, n, exampleWeights))
 
         return gain - remainder
 
-    @staticmethod
-    def maximizeImportance(questions: list[int], examples: list[Example], exampleWeights: list[float]) -> int:
+    def maximizeImportance(self, questions: list[int], examples: list[Example], exampleWeights: list[float]) -> int:
         best = [0, -1]
         for question in questions:
-            result = DTree.importance(question, examples, exampleWeights)
+            result = self.importance(question, examples, exampleWeights)
             if result > best[1]:
                 best[0] = question
                 best[1] = result
@@ -115,24 +97,8 @@ class DTree:
             if input[node.value] == "True":
                 return self.answer(input, node.yes)
         
-        #print(node.value)
-        
         return node.value
 
-    def testAnswer(self, input: list[str], node = None) -> bool:
-        expected = input[-1]
-        return self.answer(input[:-1], node) == expected
-
-    def test(self, examples: list[list[str]]) -> float:
-        n = len(examples)
-        correct = 0
-
-        for example in examples:
-            example = example.split()
-            if self.answer(example[:-1]) == example[-1]:
-                correct += 1
-        
-        return 100 - (correct / n * 100)
 
     def DLT(self, examples: list[Example], attributes: list[int], parent_examples: list[Example], 
             maxDepth: int, exampleWeights = None) -> Node:
@@ -140,19 +106,19 @@ class DTree:
 
         # check if all the same classification
         if (DTree.checkAllClassSame(examples)):
-            return DTree.majority(examples)
+            return self.majority(examples)
         
         if len(attributes) == 0:
-            return DTree.majority(examples)
+            return self.majority(examples)
 
         if (len(examples) == 0):
-            return DTree.majority(parent_examples)
+            return self.majority(parent_examples)
         
         if maxDepth == 0:
-            return DTree.majority(examples)
+            return self.majority(examples)
 
         # get the question with the most importance
-        q = DTree.maximizeImportance(attributes, examples, exampleWeights)
+        q = self.maximizeImportance(attributes, examples, exampleWeights)
         tree = Node(q)
 
         noChildren = [example for i, example in enumerate(examples) if example.inputs[q] == "False"]
@@ -163,6 +129,7 @@ class DTree:
         attributes.remove(q)
 
         tree.no = self.DLT(noChildren, deepcopy(attributes), examples, maxDepth - 1, noWeights)
+        #tree.no = self.DLT()
         tree.yes = self.DLT(yesChildren, deepcopy(attributes), examples, maxDepth - 1, yesWeights)
 
         return tree
