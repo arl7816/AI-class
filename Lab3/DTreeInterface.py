@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from DataManager import DataManager
 
 COUNT = [10]
 
@@ -19,7 +20,12 @@ def print2DUtil(root, space):
     print()
     for i in range(COUNT[0], space):
         print(end=" ")
-    print(root.value)
+    
+    if root.isResponse:
+        print(root.value)
+    else:
+        print(DataManager.TEMPLATE[root.value])
+    #print(type(root.value))
     
     # Process left child
     print2DUtil(root.no, space)

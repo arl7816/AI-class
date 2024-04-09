@@ -9,8 +9,6 @@ def main() -> None:
 
     data = DataManager().getContent("Lab3/data.txt")
 
-    print(len(data))
-
     tree = DTree(data[:4200], "en", "nl", 10)
     boosted = AdaBoost(data[:4200], 10, "en", "nl")
 
@@ -19,6 +17,8 @@ def main() -> None:
 
     print("Training AdaBoost:", boosted.test(data[:4200]), "%")
     print("Testing AdaBoost:", boosted.test(data[4200:]), "%")
+
+    print2D(tree.root)
 
 
     return

@@ -32,6 +32,8 @@ class DataManager:
                     self.convertData(self.contains(line, "zjin")),
                     self.convertData(self.contains(line, "van")),
 
+                    self.convertData(not(line.isascii())),
+
                     result
                 ]
 
