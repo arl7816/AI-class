@@ -119,15 +119,20 @@ class DTree(DTreeCore):
 
         # get the question with the most importance
         q = self.maximizeImportance(attributes, examples, exampleWeights)
+
+        # generate node
         tree = Node(q)
 
+        # get all of my no and yes children (ignore the weights)
         noChildren = [example for i, example in enumerate(examples) if example.inputs[q] == "False"]
         noWeights = [weight for i, weight in enumerate(exampleWeights) if examples[i].inputs[q] == "False"]
         yesChildren = [example for i, example in enumerate(examples) if example.inputs[q] == "True"]
         yesWeights = [weight for i, weight in enumerate(exampleWeights) if examples[i].inputs[q] == "True"]
 
+
         attributes.remove(q)
 
+        # construct the left and right nodes
         tree.no = self.DLT(noChildren, deepcopy(attributes), examples, maxDepth - 1, noWeights)
         #tree.no = self.DLT()
         tree.yes = self.DLT(yesChildren, deepcopy(attributes), examples, maxDepth - 1, yesWeights)

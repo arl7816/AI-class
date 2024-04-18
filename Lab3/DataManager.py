@@ -2,6 +2,9 @@ class DataManager:
     TEMPLATE = ["the", "be", "to", "of", "and", 
                 "de/het", "een", "en", "zjin", "van", 
                 "Accents?", "formal"]
+    
+    TEMPLATE2 = ["Accents?", "formal", "e >= n", "e most common", ]
+    
 
     def convertData(self, data: bool) -> str:
         return "True" if data else "False"
@@ -9,6 +12,7 @@ class DataManager:
     
     def contains(self, sent: str, wrd: str) -> bool:
         return sent.split().count(wrd) >= 1
+    
     
     def getContent(self, filename: str) -> list[str]:
         content = []

@@ -4,7 +4,6 @@ from copy import deepcopy
 from DTreeInterface import DTreeCore, Node, Example
 
 class Hypothesis:
-
     def __init__(self, weight, tree: DTree) -> None:
         self.weight = weight
         self.tree = tree
@@ -52,7 +51,7 @@ class AdaBoost(DTreeCore):
 
         for k in range(K):
             #print(exampleWeights)
-            h = Hypothesis(startWeight, DTree(data, 1, exampleWeights))
+            h = Hypothesis(startWeight, DTree(data, 2, exampleWeights))
 
             err = 0
 
