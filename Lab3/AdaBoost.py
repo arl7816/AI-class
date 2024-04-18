@@ -28,8 +28,8 @@ class AdaBoost(DTreeCore):
         for h in self.H:
             z += h.weight * (1 if h.tree.answer(input) == self.positive else -1)
 
-        if z > 0: return self.getPos()
-        return self.getNeg()
+        if z > 0: return self.getNeg()
+        return self.getPos()
     
     
     def test(self, examples: list[list[str]]) -> float:
