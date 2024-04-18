@@ -44,11 +44,11 @@ def main() -> None:
     
     with open("HW3/data.txt") as file:
         contents = [line.strip() for line in file.readlines()]
-        Dtree = DTree(contents, 1)
+        Dtree = DTree(contents, 4)
         print2D(Dtree.root)
 
         print("doing adaboost")
-        boost = AdaBoost(contents, 10000)
+        boost = AdaBoost(contents, 1000)
 
         #print("Printing my adaboost")
         #for h in boost.H:

@@ -1,7 +1,7 @@
 from Structs import DTree
-from math import log1p, sqrt
+from math import log, log1p, sqrt
 from copy import deepcopy
-from DTreeInterface import DTreeCore, Node, Example
+from DTreeInterface import DTreeCore, Node, Example, print2D
 
 class Hypothesis:
     def __init__(self, weight, tree: DTree) -> None:
@@ -51,7 +51,9 @@ class AdaBoost(DTreeCore):
 
         for k in range(K):
             #print(exampleWeights)
-            h = Hypothesis(startWeight, DTree(data, 2, exampleWeights))
+            h = Hypothesis(startWeight, DTree(data, "en", "nl", 10, exampleWeights))
+
+            #print(k, "generated", print2D(h.tree.root))
 
             err = 0
 
@@ -61,14 +63,18 @@ class AdaBoost(DTreeCore):
             deltaW = err / (1 - err)
             for index, example in enumerate(data):
                 if h.tree.testAnswer(example) == True:
+                    print(k, "is true")
                     exampleWeights[index] *= deltaW
             
             # Normalize the weights
             exampleWeights = AdaBoost.normalizeArray(exampleWeights)
 
-            h.weight = .5 * log1p((1 - err) / err)
+            W = (1 - err) / err
+            h.weight = .5 * log1p(W)
             H.append(h)
 
+        #print(exampleWeights)
+        
         return H
 
 
