@@ -103,6 +103,7 @@ class DTree(DTreeCore):
     def DLT(self, examples: list[Example], attributes: list[int], parent_examples: list[Example], 
             maxDepth: int, exampleWeights = None) -> Node:
         if exampleWeights is None: exampleWeights = [1]*len(examples)
+        if maxDepth is None: maxDepth = len(attributes)
 
         # check if all the same classification
         if (DTree.checkAllClassSame(examples)):
