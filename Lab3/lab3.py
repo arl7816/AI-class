@@ -4,6 +4,7 @@ from Structs import DTree
 from AdaBoost import AdaBoost
 from DTreeInterface import print2D, inOrder
 from DataManager import DataManager
+from Manager import Manager
 
 def main() -> None:
 
@@ -19,6 +20,11 @@ def main() -> None:
     print("Testing AdaBoost:", boosted.test(data[4200:]), "%")
 
     #print2D(tree.root)
+
+    Manager.save(tree, "tree")
+    tree2 = Manager.restore("tree")
+
+    print("seri", tree2.test(data[4200:]), "%")
 
 
     return
