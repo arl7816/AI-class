@@ -146,7 +146,7 @@ class DataManager:
 
                     line.lower().count("v") > 2,
 
-                    # line.lower().count("th") > 2,
+                    line.lower().count("th") < 1,
 
                     # line.lower().count("ch") > 2,
 

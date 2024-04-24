@@ -8,7 +8,8 @@ from matplotlib import pyplot as plt
 from Plot import Plotter
 from DataPoint import Data
 
-def doPlot(training: list[float], testing: list[float]) -> None:
+def doPlot(training: list[float], testing: list[float], 
+           trainingAda: list[float], testAda: list[float]) -> None:
     plotter = Plotter()
 
     trainingX = [i for i in range(1, len(training) + 1)]
@@ -17,12 +18,28 @@ def doPlot(training: list[float], testing: list[float]) -> None:
     trainingData = Data((trainingX, training))
     testingData = Data((testX, testing))
 
-    plotter.plot((1, 1, 1), trainingData, "red", "training", key = "base")
-    plotter.plot((1,1,1), testingData, "blue", "test")
+    trainingAdaData = Data((
+        [i * 5 for i in range(len(trainingAda))],
+        trainingAda
+    ))
+
+    testAdaData = Data((
+        [i * 5 for i in range(len(testAda))],
+        testAda
+    ))
+
+    plotter.plot((1, 2, 1), trainingData, "red", "training", key = "base")
+    plotter.plot((1,2,1), testingData, "blue", "test")
 
     plotter.subplots["base"].grid()
     plotter.subplots["base"].legend()
     plotter.set_labels("base", "Max Depth", "Error %", "DTree testing")
+
+    plotter.plot((1,2,2), trainingAdaData, "red", "training", key = "ada")
+    plotter.plot((1,2,2), testAdaData, "blue", "test", key = "ada")
+
+    plotter.subplots["ada"].grid()
+    plotter.subplots["ada"].legend()
 
     plotter.show()
 
@@ -43,11 +60,19 @@ def main() -> None:
         test.append(tree.test(data[4200:]))
         print("max depth", i, "complete")
 
-    ada = AdaBoost(data[:4200], 25, "en", "nl")
-    print("Training AdaBoost:", ada.test(data[:4200]), "%")
-    print("Testing AdaBoost:", ada.test(data[4200:]), "%")
+    ada = AdaBoost(data[:4200], 50, "en", "nl")
+    HAda = []
+    trainingAda = []
+    testAda = []
 
-    doPlot(training, test)
+    for i in range(0, 100, 5):
+        tree = AdaBoost(data[:4200], i, "en", "nl")
+        HAda.append(tree)
+        trainingAda.append(tree.test(data[:4200]))
+        testAda.append(tree.test(data[4200:]))
+        print("Ada of K =", i, "complete")
+
+    doPlot(training, test, trainingAda, testAda)
 
     return
 

@@ -25,16 +25,16 @@ def predict(hypoth: str, inputs: str) -> None:
         print(tree.answer(line.split()[:-1]))
 
 def main() -> None:
-    data = DataManager().getContent("Lab3/data.txt")
+    # data = DataManager().getContent("Lab3/data.txt")
 
-    tree = DTree(data[:4200], "en", "nl", None)
-    boosted = AdaBoost(data[:4200], 50, "en", "nl")
+    # tree = DTree(data[:4200], "en", "nl", None)
+    # boosted = AdaBoost(data[:4200], 50, "en", "nl")
 
-    print("Training Error DTree:", tree.test(data[:4200]), "%")
-    print("Testing Error Dtree:", tree.test(data[4200:]), "%")
+    # print("Training Error DTree:", tree.test(data[:4200]), "%")
+    # print("Testing Error Dtree:", tree.test(data[4200:]), "%")
 
-    print("Training AdaBoost:", boosted.test(data[:4200]), "%")
-    print("Testing AdaBoost:", boosted.test(data[4200:]), "%")
+    # print("Training AdaBoost:", boosted.test(data[:4200]), "%")
+    # print("Testing AdaBoost:", boosted.test(data[4200:]), "%")
 
     #print2D(tree.root)
 
@@ -44,13 +44,15 @@ def main() -> None:
     # print("seri", tree2.test(data[4200:]), "%")
 
     
-    # if sys.argv[1] == "train":
-    #     # examples, output file, learning type
-    #     train(sys.argv[2], sys.argv[3], sys.argv[4])
+    if sys.argv[1] == "train":
+        # examples, output file, learning type
+        train(sys.argv[2], sys.argv[3], sys.argv[4])
 
-    # elif sys.argv[1] == "predict":
-    #     # tree file, inputs
-    #     predict(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == "predict":
+        # tree file, inputs
+        if sys.argv[3] == None:
+            return
+        predict(sys.argv[2], sys.argv[3])
 
     return
 
