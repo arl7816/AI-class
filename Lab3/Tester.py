@@ -43,9 +43,11 @@ def main() -> None:
         test.append(tree.test(data[4200:]))
         print("max depth", i, "complete")
 
-    
-    doPlot(training, test)
+    ada = AdaBoost(data[:4200], 25, "en", "nl")
+    print("Training AdaBoost:", ada.test(data[:4200]), "%")
+    print("Testing AdaBoost:", ada.test(data[4200:]), "%")
 
+    doPlot(training, test)
 
     return
 

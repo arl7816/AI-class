@@ -15,13 +15,13 @@ class Manager:
 
     @staticmethod
     def save(obj, name: str):
-        with open(name + ".pickle", "wb") as file:
+        with open(name, "wb") as file:
             pickle.dump(obj, file)
 
     @staticmethod
     def restore(name: str):
         loaded = None
-        with open(name + ".pickle", "rb") as file:
+        with open(name, "rb") as file:
             loaded = pickle.load(file)
         return loaded
         

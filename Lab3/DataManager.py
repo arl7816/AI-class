@@ -13,7 +13,8 @@ class DataManager:
                  
                  "e > 11", "v > 1", "th > 2", "ch > 2", "ng > 2",
                  "combo > 1",
-                 "vowel freq (en) > .1", "conso freq (en) > 0.1"]
+                 "vowel freq (en) > .3", "conso freq (en) > 0.3",
+                 "t-ending >= .1", "t-ending >= .25", "t-ending >= 0.05"]
 
     
 
@@ -52,10 +53,13 @@ class DataManager:
 
         result += line.count(":") * 4
 
-        result += line.count("'") * 4
+        result += line.count("'") * 1
 
         result += line.count("(") * .25
         result += line.count(")") * .25
+
+        result += line.count("!") * 2
+        result += line.count("?") * 2
 
         result = 1 / (1 + pow(e, -log1p(result)))
 
@@ -91,6 +95,12 @@ class DataManager:
             consonant_frequency = 0
 
         return vowel_frequency, consonant_frequency
+    
+    def getTProp(self, line: str) -> float:
+        lst = line.split()
+        return len(
+            [wrd for wrd in lst if wrd.lower()[-1] == "t"]
+        ) / len(lst)
 
     def getContent(self, filename: str) -> list[str]:
         content = []
@@ -111,9 +121,9 @@ class DataManager:
 
                     self.formal(line) > .25,
 
-                    self.formal(line) > .5,
+                    .25 < self.formal(line) <= .5,
 
-                    self.formal(line) > .75,
+                    .5 < self.formal(line) > .75,
 
                     common == "e",
 
@@ -131,7 +141,7 @@ class DataManager:
 
                     self.avgWordLen(line) >= 10,
 
-                    line.lower().count("e") > 11,
+                    line.lower().count("e") > 5,
 
                     line.lower().count("v") > 1,
 
@@ -141,11 +151,17 @@ class DataManager:
 
                     line.lower().count("ng") > 2,
 
-                    self.countRepeats(line) > 1,
+                    self.countRepeats(line) > 2,
 
                     self.calculateVowelConsonantFrequencies(line, englishVowels)[0] > 0.3,
 
-                    self.calculateVowelConsonantFrequencies(line, englishVowels)[1] > 0.3
+                    self.calculateVowelConsonantFrequencies(line, englishVowels)[1] > 0.4,
+
+                    self.getTProp(line) >= .10,
+
+                    self.getTProp(line) >= .25,
+
+                    self.getTProp(line) >= .05
 
                 ], result)
 

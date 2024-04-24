@@ -69,6 +69,9 @@ class DTreeCore(ABC):
     def getPos(self) -> any: return self.positive
     def getNeg(self) -> any: return self.negative
 
+    def divide(self, a: float, b : float) -> float:
+        return a / b if b != 0 else a / 0.00001
+
     def test(self, examples: list[list[str]]) -> float:
         n = len(examples)
         correct = 0

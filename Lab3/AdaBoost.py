@@ -60,7 +60,8 @@ class AdaBoost(DTreeCore):
             for index, example in enumerate(data):
                 if h.tree.testAnswer(example) == False:
                     err += exampleWeights[index]
-            deltaW = err / (1 - err)
+            #deltaW = err / (1 - err)
+            deltaW = self.divide(err, 1 - err)
             for index, example in enumerate(data):
                 if h.tree.testAnswer(example) == True:
                     print(k, "is true")
@@ -69,7 +70,8 @@ class AdaBoost(DTreeCore):
             # Normalize the weights
             exampleWeights = AdaBoost.normalizeArray(exampleWeights)
 
-            W = (1 - err) / err
+            #W = (1 - err) / err
+            W = self.divide(1 - err, err)
             h.weight = .5 * log1p(W)
             H.append(h)
 
