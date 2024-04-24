@@ -28,7 +28,7 @@ def main() -> None:
     data = DataManager().getContent("Lab3/data.txt")
 
     tree = DTree(data[:4200], "en", "nl", None)
-    boosted = AdaBoost(data[:4200], 25, "en", "nl")
+    boosted = AdaBoost(data[:4200], 50, "en", "nl")
 
     print("Training Error DTree:", tree.test(data[:4200]), "%")
     print("Testing Error Dtree:", tree.test(data[4200:]), "%")

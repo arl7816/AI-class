@@ -12,6 +12,7 @@ class DataManager:
                  "avg < 5", "5 <= avg < 10", "avg >= 10", 
                  
                  "e > 11", "v > 1", "th > 2", "ch > 2", "ng > 2",
+                 "ij > 1", "sch > 1"
                  "combo > 1",
                  "vowel freq (en) > .3", "conso freq (en) > 0.3",
                  "t-ending >= .1", "t-ending >= .25", "t-ending >= 0.05"]
@@ -141,27 +142,33 @@ class DataManager:
 
                     self.avgWordLen(line) >= 10,
 
-                    line.lower().count("e") > 5,
+                    # line.lower().count("e") > 5,
 
-                    line.lower().count("v") > 1,
+                    line.lower().count("v") > 2,
 
-                    line.lower().count("th") > 2,
+                    # line.lower().count("th") > 2,
 
-                    line.lower().count("ch") > 2,
+                    # line.lower().count("ch") > 2,
 
-                    line.lower().count("ng") > 2,
+                    # line.lower().count("ng") > 2,
+
+                    line.lower().count("ij") < 1,
+
+                    line.lower().count("sch") < 1,
+
+                    line.lower().count("hein") < 1,
 
                     self.countRepeats(line) > 2,
 
-                    self.calculateVowelConsonantFrequencies(line, englishVowels)[0] > 0.3,
+                    self.calculateVowelConsonantFrequencies(line, englishVowels)[0] > 0.35,
 
-                    self.calculateVowelConsonantFrequencies(line, englishVowels)[1] > 0.4,
+                    # self.calculateVowelConsonantFrequencies(line, englishVowels)[1] > 0.4,
 
-                    self.getTProp(line) >= .10,
+                    0.05 <= self.getTProp(line) < .10,
 
-                    self.getTProp(line) >= .25,
+                    0.1 <= self.getTProp(line) < .25,
 
-                    self.getTProp(line) >= .05
+                    .25 <= self.getTProp(line) < .5
 
                 ], result)
 
