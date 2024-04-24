@@ -37,6 +37,7 @@ def doPlot(training: list[float], testing: list[float],
 
     plotter.plot((1,2,2), trainingAdaData, "red", "training", key = "ada")
     plotter.plot((1,2,2), testAdaData, "blue", "test", key = "ada")
+    plotter.set_labels("ada", "K", "Error %", "Adaboosting testing")
 
     plotter.subplots["ada"].grid()
     plotter.subplots["ada"].legend()
@@ -65,7 +66,7 @@ def main() -> None:
     trainingAda = []
     testAda = []
 
-    for i in range(0, 100, 5):
+    for i in range(0, 105, 5):
         tree = AdaBoost(data[:4200], i, "en", "nl")
         HAda.append(tree)
         trainingAda.append(tree.test(data[:4200]))

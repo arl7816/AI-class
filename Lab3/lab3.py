@@ -21,8 +21,12 @@ def train(examples: str, output: str, learningType):
 def predict(hypoth: str, inputs: str) -> None:
     tree = Manager.restore(hypoth)
 
-    for line in DataManager().getContent(inputs):
-        print(tree.answer(line.split()[:-1]))
+    with open(inputs, "rb") as file:
+        for line in file:
+            print(tree.answer(line))
+
+    #for line in DataManager().getContent(inputs):
+        #print(tree.answer(line.split()[:-1]))
 
 def main() -> None:
     # data = DataManager().getContent("Lab3/data.txt")
