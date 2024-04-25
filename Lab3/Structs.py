@@ -5,8 +5,8 @@ from math import log
 from DTreeInterface import DTreeCore, Node, Example
 
 class DTree(DTreeCore):
-    def __init__(self, data: list[str], positive: str, negative: str, maxDepth = 10, exampleWeight = None) -> None:
-        super().__init__(positive, negative)
+    def __init__(self, data: list[str], positive: str, negative: str, maxDepth = 10, exampleWeight = None, file = "") -> None:
+        super().__init__(positive, negative, file)
         self.examples = [Example(dataPoint.split()) for dataPoint in data]
         self.root = self.DLT(self.examples, [i for i in range(len(self.examples[0].inputs))], None, maxDepth, exampleWeight)
 
