@@ -19,7 +19,7 @@ def train(examples: str, output: str, learningType: str):
 
     tree = None
     if learningType == "dt":
-        tree = DTree(data, "en", "nl", 20, file = examples)
+        tree = DTree(data, "en", "nl", 50, file = examples)
     elif learningType == "ada":
         tree = AdaBoost(data, 50, "en", "nl", examples)
     
